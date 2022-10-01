@@ -1,7 +1,14 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 
-import { Navbar, Footer, Landing, About, Contacts } from "../../components";
+import {
+  Navbar,
+  Footer,
+  Landing,
+  About,
+  Contacts,
+  Stake,
+} from "../../components";
 import { headerData } from "../../data/headerData";
 
 function Main() {
@@ -13,8 +20,9 @@ function Main() {
 
       <Navbar />
       <Landing />
+      <Stake />
       <About />
-      {/* <Contacts /> */}
+      <Contacts />
       {/* <Footer /> */}
     </div>
   );

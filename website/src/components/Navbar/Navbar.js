@@ -188,6 +188,15 @@ function Navbar() {
             </Fade>
 
             <Fade left>
+              <NavLink to="/#stake" smooth={true} spy="true" duration={2000}>
+                <div className={classes.drawerItem}>
+                  <FaUser className={classes.drawerIcon} />
+                  <span className={classes.drawerLinks}>Stake</span>
+                </div>
+              </NavLink>
+            </Fade>
+
+            <Fade left>
               <NavLink to="/#about" smooth={true} spy="true" duration={2000}>
                 <div className={classes.drawerItem}>
                   <FaUser className={classes.drawerIcon} />
