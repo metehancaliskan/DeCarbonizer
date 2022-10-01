@@ -8,6 +8,8 @@ import {
   About,
   Contacts,
   Stake,
+  Donation,
+  Burn,
 } from "../../components";
 import { headerData } from "../../data/headerData";
 
@@ -21,8 +23,10 @@ function Main() {
       <Navbar />
       <Landing />
       <Stake />
-      <About />
-      <Contacts />
+      <Donation />
+      <Burn />
+      {/* <About /> */}
+      {/* <Contacts /> */}
       {/* <Footer /> */}
     </div>
   );

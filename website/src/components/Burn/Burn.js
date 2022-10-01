@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-import "./Stake.css";
+import "./Burn.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 
-export const Stake = () => {
+export const Burn = () => {
   const { theme } = useContext(ThemeContext);
   const useStyles = makeStyles((t) => ({
     input: {
@@ -112,7 +112,7 @@ export const Stake = () => {
       borderRadius: "30px",
       textTransform: "inherit",
       textDecoration: "none",
-      width: "45%",
+      width: "100%",
       height: "50px",
       fontSize: "1rem",
       fontWeight: "500",
@@ -131,20 +131,15 @@ export const Stake = () => {
   }));
   const classes = useStyles();
 
-  const [stake, setStake] = useState(0);
+  const [burn, setBurn] = useState(0);
 
-  const onClickApprove = () => {
-    console.log("Approve");
+  const onClickBurn = () => {
+    console.log("Donation");
   };
-
-  const onClickStake = () => {
-    console.log("Stake");
-  };
-
   return (
     <div
       className="about"
-      id="stake"
+      id="burn"
       style={{ backgroundColor: theme.secondary }}
     >
       <div className="line-styling">
@@ -163,33 +158,30 @@ export const Stake = () => {
       </div>
       <div className="about-body">
         <div className="about-description">
-          <h2 style={{ color: theme.primary }}>{"Stake"}</h2>
+          <h2 style={{ color: theme.primary }}>{"Burn"}</h2>
           {/* <p style={{ color: theme.tertiary80 }}>
-            {aboutData.description1}
-            <br />
-            <br />
-            {aboutData.description2}
-          </p> */}
+    {aboutData.description1}
+    <br />
+    <br />
+    {aboutData.description2}
+  </p> */}
           <div className="input-container">
             <label htmlFor="Name" className={classes.label}>
-              Stake
+              Burn
             </label>
             <input
               placeholder="50"
-              value={stake}
-              onChange={(e) => setStake(e.target.value)}
+              value={burn}
+              onChange={(e) => setBurn(e.target.value)}
               type="number"
-              name="Stake"
+              name="Burn"
               className={`form-input ${classes.input}`}
             />
           </div>
 
           <div className="lcr-buttonContainer">
-            <Button className={classes.resumeBtn} onClick={onClickApprove}>
-              Approve
-            </Button>
-            <Button className={classes.contactBtn} onClick={onClickStake}>
-              Stake
+            <Button className={classes.contactBtn} onClick={onClickBurn}>
+              Donation
             </Button>
           </div>
         </div>
@@ -201,4 +193,4 @@ export const Stake = () => {
   );
 };
 
-export default Stake;
+export default Burn;

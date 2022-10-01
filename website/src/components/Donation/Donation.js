@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
-import "./Stake.css";
+import "./Donation.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 
-export const Stake = () => {
+export const Donation = () => {
   const { theme } = useContext(ThemeContext);
   const useStyles = makeStyles((t) => ({
     input: {
@@ -131,20 +131,20 @@ export const Stake = () => {
   }));
   const classes = useStyles();
 
-  const [stake, setStake] = useState(0);
+  const [donation, setDonation] = useState(0);
 
   const onClickApprove = () => {
     console.log("Approve");
   };
 
-  const onClickStake = () => {
-    console.log("Stake");
+  const onClickDonation = () => {
+    console.log("Donation");
   };
 
   return (
     <div
       className="about"
-      id="stake"
+      id="donation"
       style={{ backgroundColor: theme.secondary }}
     >
       <div className="line-styling">
@@ -163,23 +163,23 @@ export const Stake = () => {
       </div>
       <div className="about-body">
         <div className="about-description">
-          <h2 style={{ color: theme.primary }}>{"Stake"}</h2>
+          <h2 style={{ color: theme.primary }}>{"Donation"}</h2>
           {/* <p style={{ color: theme.tertiary80 }}>
-            {aboutData.description1}
-            <br />
-            <br />
-            {aboutData.description2}
-          </p> */}
+        {aboutData.description1}
+        <br />
+        <br />
+        {aboutData.description2}
+      </p> */}
           <div className="input-container">
             <label htmlFor="Name" className={classes.label}>
-              Stake
+              Donation
             </label>
             <input
               placeholder="50"
-              value={stake}
-              onChange={(e) => setStake(e.target.value)}
+              value={donation}
+              onChange={(e) => setDonation(e.target.value)}
               type="number"
-              name="Stake"
+              name="Donation"
               className={`form-input ${classes.input}`}
             />
           </div>
@@ -188,8 +188,8 @@ export const Stake = () => {
             <Button className={classes.resumeBtn} onClick={onClickApprove}>
               Approve
             </Button>
-            <Button className={classes.contactBtn} onClick={onClickStake}>
-              Stake
+            <Button className={classes.contactBtn} onClick={onClickDonation}>
+              Donation
             </Button>
           </div>
         </div>
@@ -201,4 +201,4 @@ export const Stake = () => {
   );
 };
 
-export default Stake;
+export default Donation;

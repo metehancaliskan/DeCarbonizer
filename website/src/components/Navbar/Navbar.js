@@ -197,6 +197,24 @@ function Navbar() {
             </Fade>
 
             <Fade left>
+              <NavLink to="/#donation" smooth={true} spy="true" duration={2000}>
+                <div className={classes.drawerItem}>
+                  <FaUser className={classes.drawerIcon} />
+                  <span className={classes.drawerLinks}>Donation</span>
+                </div>
+              </NavLink>
+            </Fade>
+
+            <Fade left>
+              <NavLink to="/#burn" smooth={true} spy="true" duration={2000}>
+                <div className={classes.drawerItem}>
+                  <FaUser className={classes.drawerIcon} />
+                  <span className={classes.drawerLinks}>Burn</span>
+                </div>
+              </NavLink>
+            </Fade>
+
+            <Fade left>
               <NavLink to="/#about" smooth={true} spy="true" duration={2000}>
                 <div className={classes.drawerItem}>
                   <FaUser className={classes.drawerIcon} />
