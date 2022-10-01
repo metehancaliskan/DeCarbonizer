@@ -195,7 +195,7 @@ export const Donation = () => {
 
             notification.open({
                 message: <p className='error-title'>Hata</p>,
-                description: <p className='error-description'>Bir hata oldu.</p>,
+                description: <p className='error-description'>{error.message}</p>,
                 placement: "topLeft",
                 className: "notification shadow",
                 icon: <CloseCircleFilled style={{ color: 'rgb(210,40,40)' }} />,
@@ -211,7 +211,6 @@ const donateContractParameters = {
   addressOrName: contractAddress.treeToken,
   contractInterface: treeToken,
 } 
-console.log("donation",donation)
 const donateWriteData = useContractWrite({
   mode: 'recklesslyUnprepared',
   ...donateContractParameters,

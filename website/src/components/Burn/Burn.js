@@ -3,8 +3,41 @@ import "./Burn.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+import { useContractWrite, useAccount, useWaitForTransaction, useContractRead } from "wagmi";
+
+import { notification } from 'antd';
+
+import contractAddress from "../../contracts/contractAddress.json"
+import carbonTokenAbi from "../../contracts/CarbonToken.json"
+
+import { BigNumber } from "ethers";
+
+import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
+
+function convertToBigNumber( value ) {
+  try {
+  const DECIMALS = BigNumber.from(10).pow( BigNumber.from(18) );
+  let newValue = BigNumber.from(value);
+  return newValue.mul( DECIMALS );
+  } catch(e) {
+    return null;
+  }
+}
+
+function convertFromBigNumber(  value ) {
+  try {
+  const DECIMALS = BigNumber.from(10).pow( BigNumber.from(16) );
+  let newValue = BigNumber.from(value);
+  return newValue.div( DECIMALS ).toNumber() / 100;
+} catch(e) {
+  return null;
+}
+}
 
 export const Burn = () => {
+
+
+  
   const { theme } = useContext(ThemeContext);
   const useStyles = makeStyles((t) => ({
     input: {
@@ -131,10 +164,90 @@ export const Burn = () => {
   }));
   const classes = useStyles();
 
-  const [burn, setBurn] = useState(0);
+  const [burn, setBurn] = useState();
+
+  const [transactionHash, setTransactionHash] = useState();
+
+  const { address, connector, isConnected } = useAccount();
+
+  const burnContractParameters = {
+    addressOrName: contractAddress.carbonToken,
+    contractInterface: carbonTokenAbi,
+  } 
+
+  const carbonBalanceData = useContractRead({
+    ...burnContractParameters,
+    functionName: 'balanceOf',
+    args: [address],
+    watch:true
+  })
+
+  const carbonBalance = convertFromBigNumber(carbonBalanceData.data);
+
+  
+  const writeData = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    ...burnContractParameters,
+    functionName: 'burn',
+    chainId: contractAddress.chainId,
+    args: [ convertToBigNumber( burn ) ],
+    onSuccess(data) {
+        //console.log("onsuccess", data)
+        setTransactionHash(data.hash);
+    },
+    onSettled(data, error) {
+        //console.log('Settled', { data, error })
+        if (error) {
+
+            notification.open({
+                message: <p className='error-title'>Hata</p>,
+                description: <p className='error-description'>{error.message}</p>,
+                placement: "topLeft",
+                className: "notification shadow",
+                icon: <CloseCircleFilled style={{ color: 'rgb(210,40,40)' }} />,
+            });
+        }
+    },
+})
+  
+    
+  
+
+let transactionWaitConfig = {};
+if (transactionHash) {
+    transactionWaitConfig = {
+        hash: transactionHash,
+        onSuccess(data) {
+            if (data?.status == 0) {
+                notification.open({
+                    message: <p className='error-title'>Error</p>,
+                    description: <p className='error-description'>İşlem Onaylanmadı</p>,
+                    placement: "topLeft",
+                    className: "notification shadow",
+                    icon: <CloseCircleFilled style={{ color: 'rgb(210,40,40)' }} />,
+                });
+            } else {
+              //console.log( data )
+                notification.open({
+                    message: <p className='success-title'>Success</p>,
+                    description: <p className='success-description'>İşlem Onaylandı!</p>,
+                    placement: "topLeft",
+                    className: "notification shadow",
+                    icon: <CheckCircleFilled style={{ color: 'rgb(50,130,0)' }} />,
+                    duration: 12,
+                });
+            }
+            
+        },
+    };
+}
+//console.log(carbonBalance);
+const transactionWaitData = useWaitForTransaction(
+    transactionWaitConfig
+);
 
   const onClickBurn = () => {
-    console.log("Donation");
+    writeData.write();
   };
   return (
     <div
@@ -167,7 +280,7 @@ export const Burn = () => {
   </p> */}
           <div className="input-container">
             <label htmlFor="Name" className={classes.label}>
-              Burn
+            {carbonBalance == null ? "Burn" : "Burn (Your Balance: " + carbonBalance + " CARBON )"}
             </label>
             <input
               placeholder="50"
@@ -181,7 +294,7 @@ export const Burn = () => {
 
           <div className="lcr-buttonContainer">
             <Button className={classes.contactBtn} onClick={onClickBurn}>
-              Donation
+              Burn
             </Button>
           </div>
         </div>
