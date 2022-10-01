@@ -27,7 +27,6 @@ contract CarbonToken is ERC20, ReentrancyGuard, Ownable, ERC20Permit {
     address pooladdress = 0x9d019EC71aEbf34bf9Ef5071974A83e2163Ac99a;
 
     Token treeToken;
-    Token carbonToken;
 
     // 365 Days (365 * 24 * 60 * 60)
     uint256 public planDuration = 31536000;
@@ -49,9 +48,8 @@ contract CarbonToken is ERC20, ReentrancyGuard, Ownable, ERC20Permit {
     event Claimed(address indexed from, uint256 amount);
     event EarlyRequest(address indexed from, uint256 amount);
 
-    constructor(Token _carbonTokenAddress, Token _treeTokenAddress) ERC20("CarbonToken", "CT") ERC20Permit("CarbonToken") {
-        _mint(msg.sender, 4 * 10 ** (decimals() + 11 ));
-        carbonToken = _carbonTokenAddress;       
+    constructor( Token _treeTokenAddress) ERC20("CarbonToken", "CT") ERC20Permit("CarbonToken") {
+        _mint(msg.sender, 4 * 10 ** (decimals() + 11 ));  
         treeToken = _treeTokenAddress;  
         totalStakers = 0;
     }
@@ -67,7 +65,7 @@ contract CarbonToken is ERC20, ReentrancyGuard, Ownable, ERC20Permit {
     }
 
         function transferCarbonToken(address to,uint256 amount) external onlyOwner{
-        require(carbonToken.transfer(to, amount), "Carbon Token transfer failed");  
+        require(transfer(to, amount), "Carbon Token transfer failed");  
     }
 
     function transferTreeToken(address to,uint256 amount) external onlyOwner{
