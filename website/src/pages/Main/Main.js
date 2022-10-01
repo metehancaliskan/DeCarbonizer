@@ -1,21 +1,7 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 
-import {
-  Navbar,
-  Footer,
-  Landing,
-  About,
-  Skills,
-  Testimonials,
-  Blog,
-  Education,
-  Experience,
-  Contacts,
-  Projects,
-  Services,
-  Achievement,
-} from "../../components";
+import { Navbar, Footer, Landing, About, Contacts } from "../../components";
 import { headerData } from "../../data/headerData";
 
 function Main() {
@@ -28,16 +14,8 @@ function Main() {
       <Navbar />
       <Landing />
       <About />
-      <Education />
-      <Skills />
-      <Experience />
-      {/* <Projects /> */}
-      <Achievement />
-      <Services />
-      {/* <Testimonials /> */}
-      {/* <Blog /> */}
-      <Contacts />
-      <Footer />
+      {/* <Contacts /> */}
+      {/* <Footer /> */}
     </div>
   );
 }
