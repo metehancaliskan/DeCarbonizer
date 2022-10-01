@@ -2,13 +2,10 @@ import React, { useContext, useState } from "react";
 import { NavHashLink as NavLink } from "react-router-hash-link";
 import Fade from "react-reveal/Fade";
 import { IoMenuSharp, IoHomeSharp } from "react-icons/io5";
-import { HiDocumentText } from "react-icons/hi";
-import { BsFillGearFill } from "react-icons/bs";
-import { TiBusinessCard } from "react-icons/ti";
-
-import { GiSkills, GiAchievement } from "react-icons/gi";
-import { MdPhone } from "react-icons/md";
-import { FaUser, FaFolderOpen } from "react-icons/fa";
+import { FcDonate } from "react-icons/fc";
+import { ImFire } from "react-icons/im";
+import { FaUser } from "react-icons/fa";
+import { RiCoinsLine, RiSafeFill } from "react-icons/ri";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CloseIcon from "@material-ui/icons/Close";
@@ -190,7 +187,7 @@ function Navbar() {
             <Fade left>
               <NavLink to="/#stake" smooth={true} spy="true" duration={2000}>
                 <div className={classes.drawerItem}>
-                  <FaUser className={classes.drawerIcon} />
+                  <RiCoinsLine className={classes.drawerIcon} />
                   <span className={classes.drawerLinks}>Stake</span>
                 </div>
               </NavLink>
@@ -199,7 +196,7 @@ function Navbar() {
             <Fade left>
               <NavLink to="/#donation" smooth={true} spy="true" duration={2000}>
                 <div className={classes.drawerItem}>
-                  <FaUser className={classes.drawerIcon} />
+                  <FcDonate className={classes.drawerIcon} />
                   <span className={classes.drawerLinks}>Donation</span>
                 </div>
               </NavLink>
@@ -208,17 +205,17 @@ function Navbar() {
             <Fade left>
               <NavLink to="/#burn" smooth={true} spy="true" duration={2000}>
                 <div className={classes.drawerItem}>
-                  <FaUser className={classes.drawerIcon} />
+                  <ImFire className={classes.drawerIcon} />
                   <span className={classes.drawerLinks}>Burn</span>
                 </div>
               </NavLink>
             </Fade>
 
             <Fade left>
-              <NavLink to="/#about" smooth={true} spy="true" duration={2000}>
+              <NavLink to="/#pool" smooth={true} spy="true" duration={2000}>
                 <div className={classes.drawerItem}>
-                  <FaUser className={classes.drawerIcon} />
-                  <span className={classes.drawerLinks}>About</span>
+                  <RiSafeFill className={classes.drawerIcon} />
+                  <span className={classes.drawerLinks}>Pool</span>
                 </div>
               </NavLink>
             </Fade>

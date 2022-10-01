@@ -10,6 +10,7 @@ import {
   Stake,
   Donation,
   Burn,
+  Pool,
 } from "../../components";
 import { headerData } from "../../data/headerData";
 
@@ -25,6 +26,7 @@ function Main() {
       <Stake />
       <Donation />
       <Burn />
+      <Pool />
       {/* <About /> */}
       {/* <Contacts /> */}
       {/* <Footer /> */}
