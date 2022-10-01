@@ -74,6 +74,7 @@ import {
   export default function WagmiComponent() {
     return (
       <WagmiConfig client={client}>
+        
         <App/>
       </WagmiConfig>
     );

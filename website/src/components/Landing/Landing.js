@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Button } from "@material-ui/core";
 import { NavHashLink as NavLink } from "react-router-hash-link";
 import { makeStyles } from "@material-ui/core/styles";
@@ -6,6 +6,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import "./Landing.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { headerData } from "../../data/headerData";
+import { useAccount, useConnect, useDisconnect } from "wagmi";
+
+function textShorter(text, first, end) {
+  if (text.length > first + end) {
+    return text.substring(0, first) + "..." + text.substring(text.length - end, text.length);
+  } else {
+    return text;
+  }
+}
 
 function Landing() {
   const { theme, drawerOpen } = useContext(ThemeContext);
@@ -80,9 +89,21 @@ function Landing() {
 
   const classes = useStyles();
 
+  const [ walletHover, setWalletHover ] = useState(false);
+  const { address, connector, isConnected } = useAccount()
+  const { connect, connectors, error, isLoading, pendingConnector } =
+    useConnect()
+  const { disconnect } = useDisconnect()
+  const metamaskConnector = connectors[0];
+
   const onClickLogIn = () => {
-    console.log("log in with metamask");
+    connect({ connector: metamaskConnector });
+    setWalletHover(false);
   };
+
+  const handleDisconnect = () => {
+    disconnect();
+  }
 
   return (
     <div className="landing">
@@ -110,9 +131,17 @@ function Landing() {
             <p>{headerData.desciption}</p>
 
             <div className="lcr-buttonContainer">
-              <Button className={classes.logInBtn} onClick={onClickLogIn}>
-                Log In with MetaMask
-              </Button>
+              {address ?
+                <Button className={classes.logInBtn} onClick={handleDisconnect} onMouseEnter={() => setWalletHover(true)} onMouseLeave={() => setWalletHover(false)}>
+                  { walletHover ? "Disconnect" : textShorter(address, 5, 3) }
+                </Button> :
+                
+                <Button className={classes.logInBtn} onClick={onClickLogIn} >
+                  Log In with MetaMask
+                </Button>
+
+              }
+
               {/* <NavLink to="/#contacts" smooth={true} spy="true" duration={2000}>
                 <Button className={classes.contactBtn}>Contact</Button>
               </NavLink> */}

@@ -12,6 +12,7 @@ import "slick-carousel/slick/slick-theme.css";
 ReactDOM.render(
   <ThemeContextProvider>
     <WagmiComponent />
+   
   </ThemeContextProvider>,
   document.getElementById("root")
 );
