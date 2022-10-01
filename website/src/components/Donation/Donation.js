@@ -3,6 +3,42 @@ import "./Donation.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+import { useContractWrite, useAccount, useWaitForTransaction } from "wagmi";
+
+import { notification } from 'antd';
+
+import contractAddress from "../../contracts/contractAddress.json"
+import stableCoinAbi from "../../contracts/MockStableCoin.json"
+import treeToken from "../../contracts/TreeToken.json"
+
+import { BigNumber } from "ethers";
+
+import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
+
+const TREE_PRICE = 5;
+
+function convertToBigNumber( value ) {
+  try {
+  const DECIMALS = BigNumber.from(10).pow( BigNumber.from(18) );
+  let newValue = BigNumber.from(value);
+  return newValue.mul( DECIMALS );
+  } catch(e) {
+    return null;
+  }
+}
+
+function calculateAward( value ) {
+  try {
+  const DECIMALS = BigNumber.from(10).pow( BigNumber.from(18) );
+  let newValue = BigNumber.from(value);
+  newValue = newValue.mul( DECIMALS );
+  let treeReward = newValue.div(TREE_PRICE);
+  treeReward = treeReward.div( DECIMALS );
+  return treeReward;
+  } catch(e) {
+    return null;
+  }
+}
 
 export const Donation = () => {
   const { theme } = useContext(ThemeContext);
@@ -131,14 +167,115 @@ export const Donation = () => {
   }));
   const classes = useStyles();
 
-  const [donation, setDonation] = useState(0);
+  const approveContractParameters = {
+    addressOrName: contractAddress.stableCoin,
+    contractInterface: stableCoinAbi,
+  } 
+
+  const [donation, setDonation] = useState();
+  const [transactionHash, setTransactionHash] = useState();
+
+  const { address, connector, isConnected } = useAccount();
+
+
+  
+  const writeData = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    ...approveContractParameters,
+    functionName: 'approve',
+    chainId: contractAddress.chainId,
+    args: [contractAddress.treeToken, convertToBigNumber( donation ) ],
+    onSuccess(data) {
+        //console.log("onsuccess", data)
+        setTransactionHash(data.hash);
+    },
+    onSettled(data, error) {
+        //console.log('Settled', { data, error })
+        if (error) {
+
+            notification.open({
+                message: <p className='error-title'>Hata</p>,
+                description: <p className='error-description'>Bir hata oldu.</p>,
+                placement: "topLeft",
+                className: "notification shadow",
+                icon: <CloseCircleFilled style={{ color: 'rgb(210,40,40)' }} />,
+            });
+        }
+    },
+})
+  
+    
+  
+
+const donateContractParameters = {
+  addressOrName: contractAddress.treeToken,
+  contractInterface: treeToken,
+} 
+console.log("donation",donation)
+const donateWriteData = useContractWrite({
+  mode: 'recklesslyUnprepared',
+  ...donateContractParameters,
+  functionName: 'donate',
+  chainId: contractAddress.chainId,
+  args: [convertToBigNumber( donation ) ],
+  onSuccess(data) {
+      //console.log("onsuccess", data)
+      setTransactionHash(data.hash);
+  },
+  onSettled(data, error) {
+      //console.log('Settled', { data, error })
+      if (error) {
+
+          notification.open({
+              message: <p className='error-title'>Hata</p>,
+              description: <p className='error-description'>Bir hata oluştu.</p>,
+              placement: "topLeft",
+              className: "notification shadow",
+              icon: <CloseCircleFilled style={{ color: 'rgb(210,40,40)' }} />,
+          });
+      }
+  },
+})
+
+let transactionWaitConfig = {};
+if (transactionHash) {
+    transactionWaitConfig = {
+        hash: transactionHash,
+        onSuccess(data) {
+            if (data?.status == 0) {
+                notification.open({
+                    message: <p className='error-title'>Error</p>,
+                    description: <p className='error-description'>İşlem Onaylanmadı</p>,
+                    placement: "topLeft",
+                    className: "notification shadow",
+                    icon: <CloseCircleFilled style={{ color: 'rgb(210,40,40)' }} />,
+                });
+            } else {
+              console.log( data )
+                notification.open({
+                    message: <p className='success-title'>Success</p>,
+                    description: <p className='success-description'>İşlem Onaylandı!</p>,
+                    placement: "topLeft",
+                    className: "notification shadow",
+                    icon: <CheckCircleFilled style={{ color: 'rgb(50,130,0)' }} />,
+                    duration: 12,
+                });
+            }
+            
+        },
+    };
+}
+
+const transactionWaitData = useWaitForTransaction(
+    transactionWaitConfig
+);
 
   const onClickApprove = () => {
-    console.log("Approve");
+    writeData.write();
   };
 
   const onClickDonation = () => {
-    console.log("Donation");
+    donateWriteData.write();
   };
 
   return (
@@ -172,12 +309,12 @@ export const Donation = () => {
       </p> */}
           <div className="input-container">
             <label htmlFor="Name" className={classes.label}>
-              Donation
+              { calculateAward( donation ) ? "Donation (MUSD) -> " + calculateAward( donation ) + " TREE" : "Donation (" + TREE_PRICE + " MUSD -> 1 TREE)" }
             </label>
             <input
               placeholder="50"
               value={donation}
-              onChange={(e) => setDonation(e.target.value)}
+              onChange={(e) => setDonation( e.target.value)}
               type="number"
               name="Donation"
               className={`form-input ${classes.input}`}
@@ -186,12 +323,13 @@ export const Donation = () => {
 
           <div className="lcr-buttonContainer">
             <Button className={classes.resumeBtn} onClick={onClickApprove}>
-              Approve
+              Approve MUSD
             </Button>
             <Button className={classes.contactBtn} onClick={onClickDonation}>
-              Donation
+              Donate
             </Button>
           </div>
+          
         </div>
         <div className="about-img">
           <img src={theme.aboutimg1} alt="" />

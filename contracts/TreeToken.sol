@@ -9,15 +9,15 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract TreeToken is ERC20, Ownable, ERC20Permit {
 
-    address donateAddress = 0x9d019EC71aEbf34bf9Ef5071974A83e2163Ac99a;
-    address constant stableCoinAddress = 0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8; 
+    address donateAddress = 0xC4C022271afCe9Bfa8b7C9807C4A2C6f456c5b69;
+    address constant stableCoinAddress = 0x161DdeF47226C84596ad4c7290c30b4D8FC3AcfF; 
 
-    uint treePrice = 5;
+    uint treePrice = 5 ** decimals();
     IERC20 stableToken;
 
     bool locked;
 
-    constructor() ERC20("TreeToken", "TT") ERC20Permit("TreeToken") {
+    constructor() ERC20("TreeToken", "TREE") ERC20Permit("TreeToken") {
         stableToken = IERC20( stableCoinAddress );
     }
 
@@ -29,6 +29,10 @@ contract TreeToken is ERC20, Ownable, ERC20Permit {
         locked = false;
     }
 
+
+    function setTreePrice( uint _price ) external onlyOwner {
+        treePrice = _price;
+    }
 
 //first approve
     function donate(uint amount) external noReentrancy() {
