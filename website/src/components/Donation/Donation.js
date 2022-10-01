@@ -3,7 +3,7 @@ import "./Donation.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
-import { useContractWrite, useAccount, useWaitForTransaction } from "wagmi";
+import { useContractWrite, useAccount, useWaitForTransaction, useContractRead } from "wagmi";
 
 import { notification } from 'antd';
 
@@ -25,6 +25,16 @@ function convertToBigNumber( value ) {
   } catch(e) {
     return null;
   }
+}
+
+function convertFromBigNumber(  value ) {
+  try {
+  const DECIMALS = BigNumber.from(10).pow( BigNumber.from(16) );
+  let newValue = BigNumber.from(value);
+  return newValue.div( DECIMALS ).toNumber() / 100;
+} catch(e) {
+  return null;
+}
 }
 
 function calculateAward( value ) {
@@ -227,7 +237,7 @@ const donateWriteData = useContractWrite({
 
           notification.open({
               message: <p className='error-title'>Hata</p>,
-              description: <p className='error-description'>Bir hata oluştu.</p>,
+              description: <p className='error-description'>{error.message}</p>,
               placement: "topLeft",
               className: "notification shadow",
               icon: <CloseCircleFilled style={{ color: 'rgb(210,40,40)' }} />,
@@ -264,6 +274,15 @@ if (transactionHash) {
         },
     };
 }
+
+const musdBalanceData = useContractRead({
+  ...approveContractParameters,
+  functionName: 'balanceOf',
+  args: [address],
+  watch:true
+})
+
+const musdBalance = convertFromBigNumber(musdBalanceData.data);
 
 const transactionWaitData = useWaitForTransaction(
     transactionWaitConfig
@@ -310,6 +329,7 @@ const transactionWaitData = useWaitForTransaction(
             <label htmlFor="Name" className={classes.label}>
               { calculateAward( donation ) ? "Donation (MUSD) -> " + calculateAward( donation ) + " TREE" : "Donation (" + TREE_PRICE + " MUSD -> 1 TREE)" }
             </label>
+            
             <input
               placeholder="50"
               value={donation}
@@ -319,7 +339,7 @@ const transactionWaitData = useWaitForTransaction(
               className={`form-input ${classes.input}`}
             />
           </div>
-
+          {musdBalance && "Your Balance: " + musdBalance +" MUSD"}
           <div className="lcr-buttonContainer">
             <Button className={classes.resumeBtn} onClick={onClickApprove}>
               Approve MUSD
