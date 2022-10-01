@@ -7,10 +7,15 @@ import "./Landing.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { headerData } from "../../data/headerData";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
+import Logo from "../../assets/png/logo.png";
 
 function textShorter(text, first, end) {
   if (text.length > first + end) {
-    return text.substring(0, first) + "..." + text.substring(text.length - end, text.length);
+    return (
+      text.substring(0, first) +
+      "..." +
+      text.substring(text.length - end, text.length)
+    );
   } else {
     return text;
   }
@@ -89,11 +94,11 @@ function Landing() {
 
   const classes = useStyles();
 
-  const [ walletHover, setWalletHover ] = useState(false);
-  const { address, connector, isConnected } = useAccount()
+  const [walletHover, setWalletHover] = useState(false);
+  const { address, connector, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } =
-    useConnect()
-  const { disconnect } = useDisconnect()
+    useConnect();
+  const { disconnect } = useDisconnect();
   const metamaskConnector = connectors[0];
 
   const onClickLogIn = () => {
@@ -103,7 +108,7 @@ function Landing() {
 
   const handleDisconnect = () => {
     disconnect();
-  }
+  };
 
   return (
     <div className="landing">
@@ -113,7 +118,7 @@ function Landing() {
           style={{ backgroundColor: theme.primary }}
         ></div>
         <img
-          src={headerData.image}
+          src={Logo}
           alt=""
           className="landing--img"
           style={{
@@ -131,16 +136,20 @@ function Landing() {
             <p>{headerData.desciption}</p>
 
             <div className="lcr-buttonContainer">
-              {address ?
-                <Button className={classes.logInBtn} onClick={handleDisconnect} onMouseEnter={() => setWalletHover(true)} onMouseLeave={() => setWalletHover(false)}>
-                  { walletHover ? "Disconnect" : textShorter(address, 5, 3) }
-                </Button> :
-                
-                <Button className={classes.logInBtn} onClick={onClickLogIn} >
+              {address ? (
+                <Button
+                  className={classes.logInBtn}
+                  onClick={handleDisconnect}
+                  onMouseEnter={() => setWalletHover(true)}
+                  onMouseLeave={() => setWalletHover(false)}
+                >
+                  {walletHover ? "Disconnect" : textShorter(address, 5, 3)}
+                </Button>
+              ) : (
+                <Button className={classes.logInBtn} onClick={onClickLogIn}>
                   Log In with MetaMask
                 </Button>
-
-              }
+              )}
 
               {/* <NavLink to="/#contacts" smooth={true} spy="true" duration={2000}>
                 <Button className={classes.contactBtn}>Contact</Button>

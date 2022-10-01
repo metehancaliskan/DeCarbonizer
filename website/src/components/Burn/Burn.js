@@ -3,6 +3,7 @@ import "./Burn.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+import BurnImg from "../../assets/png/StakeImg.avif";
 
 export const Burn = () => {
   const { theme } = useContext(ThemeContext);
@@ -186,7 +187,7 @@ export const Burn = () => {
           </div>
         </div>
         <div className="about-img">
-          <img src={theme.aboutimg1} alt="" />
+          <img src={BurnImg} alt="" />
         </div>
       </div>
     </div>

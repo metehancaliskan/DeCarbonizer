@@ -3,6 +3,7 @@ import "./Stake.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+import StakeImg from "../../assets/png/StakeImg.avif";
 
 export const Stake = () => {
   const { theme } = useContext(ThemeContext);
@@ -194,7 +195,7 @@ export const Stake = () => {
           </div>
         </div>
         <div className="about-img">
-          <img src={theme.aboutimg1} alt="" />
+          <img src={StakeImg} alt="" />
         </div>
       </div>
     </div>

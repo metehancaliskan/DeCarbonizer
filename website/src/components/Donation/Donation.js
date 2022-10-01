@@ -3,6 +3,7 @@ import "./Donation.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+import DonationImg from "../../assets/png/Seedling.svg";
 
 export const Donation = () => {
   const { theme } = useContext(ThemeContext);
@@ -194,7 +195,7 @@ export const Donation = () => {
           </div>
         </div>
         <div className="about-img">
-          <img src={theme.aboutimg1} alt="" />
+          <img src={DonationImg} alt="" />
         </div>
       </div>
     </div>
