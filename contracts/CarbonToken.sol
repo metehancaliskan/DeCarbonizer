@@ -10,6 +10,21 @@ contract CarbonToken is ERC20, Ownable, ERC20Permit {
         _mint(msg.sender, 4 * 10 ** (decimals() + 11 ));
     }
 
+    modifier noReentrancy() {
+        require(!locked, "No reentrancy");
 
-    
+        locked = true;
+        _;
+        locked = false;
+    }
+
+
+    function burn(uint amount) external noReentrancy() {
+        address msgSender = msg.sender;
+        require( balanceOf( msgSender ) >= amount, "not enough balance" );
+        _burn(msgSender,amount/10);
+        transferFrom( msgSender, pooladdress, amount-amount/10 );
+    }
+
+
 }
