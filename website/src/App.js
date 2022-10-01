@@ -1,17 +1,15 @@
 import "./App.css";
 
+import {useBlockNumber} from 'wagmi'
+
 function App() {
+
+  const blockData = useBlockNumber();
+
   return (
     <div className="App">
       <header className="App-header">
-        {/* <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a> */}
+        {blockData.data}
         Carbonizer
       </header>
     </div>
