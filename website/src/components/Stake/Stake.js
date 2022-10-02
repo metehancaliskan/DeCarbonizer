@@ -5,18 +5,23 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import StakeImg from "../../assets/svg/StakeImg.svg";
 
-import { useContractWrite, useAccount, useWaitForTransaction, useContractRead } from "wagmi";
+import {
+  useContractWrite,
+  useAccount,
+  useWaitForTransaction,
+  useContractRead,
+} from "wagmi";
 
-import { notification } from 'antd';
+import { notification } from "antd";
 
-import contractAddress from "../../contracts/contractAddress.json"
-import stableCoinAbi from "../../contracts/MockStableCoin.json"
-import treeTokenAbi from "../../contracts/TreeToken.json"
-import carbonTokenAbi from "../../contracts/CarbonToken.json"
+import contractAddress from "../../contracts/contractAddress.json";
+import stableCoinAbi from "../../contracts/MockStableCoin.json";
+import treeTokenAbi from "../../contracts/TreeToken.json";
+import carbonTokenAbi from "../../contracts/CarbonToken.json";
 
 import { BigNumber } from "ethers";
 
-import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
+import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 
 function convertToBigNumber(value) {
   try {
@@ -36,6 +41,7 @@ function convertFromBigNumber(value) {
   } catch (e) {
     return null;
   }
+
 }
 
 function convertFromBigNumberClaim(value) {
@@ -45,6 +51,7 @@ function convertFromBigNumberClaim(value) {
   } catch (e) {
     return null;
   }
+
 }
 
 export const Stake = () => {
@@ -133,7 +140,7 @@ export const Stake = () => {
       borderRadius: "30px",
       textTransform: "inherit",
       textDecoration: "none",
-      width: "45%",
+      width: "30%",
       fontSize: "1rem",
       fontWeight: "500",
       height: "50px",
@@ -155,7 +162,7 @@ export const Stake = () => {
       borderRadius: "30px",
       textTransform: "inherit",
       textDecoration: "none",
-      width: "45%",
+      width: "30%",
       height: "50px",
       fontSize: "1rem",
       fontWeight: "500",
@@ -180,26 +187,26 @@ export const Stake = () => {
   const treeParameters = {
     addressOrName: contractAddress.treeToken,
     contractInterface: treeTokenAbi,
-  }
+  };
 
   const carbonParameters = {
     addressOrName: contractAddress.carbonToken,
     contractInterface: carbonTokenAbi,
-  }
+  };
 
 
   const carbonBalanceData = useContractRead({
     ...carbonParameters,
-    functionName: 'balanceOf',
+    functionName: "balanceOf",
     args: [address],
-    watch: true
-  })
+    watch: true,
+  });
 
   const carbonBalance = convertFromBigNumber(carbonBalanceData.data);
 
   const treeBalanceData = useContractRead({
     ...treeParameters,
-    functionName: 'balanceOf',
+    functionName: "balanceOf",
     args: [address],
     watch: true
   })
@@ -354,6 +361,7 @@ export const Stake = () => {
     };
   }
 
+
   const onClickApprove = () => {
     approveWriteData.write();
   };
@@ -424,10 +432,10 @@ export const Stake = () => {
           }
 
           <div className="lcr-buttonContainer">
-            <Button className={classes.resumeBtn} onClick={onClickApprove}>
+            <Button className={classes.contactBtn} onClick={onClickApprove}>
               Approve TREE
             </Button>
-            <Button className={classes.contactBtn} onClick={onClickStake}>
+            <Button className={classes.resumeBtn} onClick={onClickStake}>
               Stake
             </Button>
             <Button className={classes.contactBtn} onClick={onClickClaim}>

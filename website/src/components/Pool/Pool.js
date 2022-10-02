@@ -3,6 +3,8 @@ import "./Pool.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+import PoolImg from "../../assets/png/1440091523.svg";
+import contractAddress from "../../contracts/contractAddress.json";
 
 export const Pool = () => {
   const { theme } = useContext(ThemeContext);
@@ -143,6 +145,17 @@ export const Pool = () => {
     console.log("Sell");
   };
 
+  const swapUrlBuy =
+    "https://traderjoexyz.com/trade?inputCurrency=" +
+    contractAddress.stableCoin +
+    "&outputCurrency=" +
+    contractAddress.carbonToken;
+  const swapUrlSell =
+    "https://traderjoexyz.com/trade?inputCurrency=" +
+    contractAddress.carbonToken +
+    "&outputCurrency=" +
+    contractAddress.stableCoin;
+
   return (
     <div
       className="about"
@@ -196,23 +209,23 @@ export const Pool = () => {
               onClick={onClickBuy}
               target="_blank"
               rel="noreferrer"
-              href={"https://bobbyhadz.com/blog/react-center-div"}
+              href={swapUrlBuy}
             >
-              AL
+              BUY
             </Button>
             <Button
               className={classes.contactBtn}
               onClick={onClickSell}
               target="_blank"
               rel="noreferrer"
-              href={"https://bobbyhadz.com/blog/react-center-div"}
+              href={swapUrlSell}
             >
-              Sat
+              SELL
             </Button>
           </div>
         </div>
         <div className="about-img">
-          <img src={theme.aboutimg1} alt="" />
+          <img src={PoolImg} alt="" />
         </div>
       </div>
     </div>
