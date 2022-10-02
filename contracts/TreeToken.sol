@@ -12,7 +12,7 @@ contract TreeToken is ERC20, Ownable, ERC20Permit {
     address donateAddress;
     address stableCoinAddress;
 
-    uint treePrice = 5 ** decimals();
+    uint treePrice = 5 * 10 ** decimals();
     IERC20 stableToken;
 
     bool locked;

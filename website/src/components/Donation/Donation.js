@@ -275,6 +275,9 @@ if (transactionHash) {
     };
 }
 
+
+
+
 const musdBalanceData = useContractRead({
   ...approveContractParameters,
   functionName: 'balanceOf',
@@ -283,6 +286,17 @@ const musdBalanceData = useContractRead({
 })
 
 const musdBalance = convertFromBigNumber(musdBalanceData.data);
+
+const treeBalanceData = useContractRead({
+  ...donateContractParameters,
+  functionName: 'balanceOf',
+  args: [address],
+  watch:true
+})
+
+
+const treeBalance = convertFromBigNumber( treeBalanceData.data );
+//console.log(treeBalanceData);
 
 const transactionWaitData = useWaitForTransaction(
     transactionWaitConfig
@@ -339,7 +353,10 @@ const transactionWaitData = useWaitForTransaction(
               className={`form-input ${classes.input}`}
             />
           </div>
-          {musdBalance && "Your Balance: " + musdBalance +" MUSD"}
+         
+          <h1>{address  && "Your Balance: " + musdBalance +" MUSD"}</h1>
+          <h1>{address  && "Your Balance: " + treeBalance +" TREE"}</h1>
+    
           <div className="lcr-buttonContainer">
             <Button className={classes.resumeBtn} onClick={onClickApprove}>
               Approve MUSD
