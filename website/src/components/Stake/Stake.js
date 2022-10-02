@@ -3,6 +3,7 @@ import "./Stake.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+import StakeImg from "../../assets/svg/StakeImg.svg";
 
 import { useContractWrite, useAccount, useWaitForTransaction, useContractRead } from "wagmi";
 
@@ -266,7 +267,7 @@ export const Stake = () => {
           </div>
         </div>
         <div className="about-img">
-          <img src={theme.aboutimg1} alt="" />
+          <img src={StakeImg} alt="" />
         </div>
       </div>
     </div>

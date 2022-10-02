@@ -3,6 +3,9 @@ import "./Donation.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+
+import DonationImg from "../../assets/svg/Seedling.svg";
+
 import { useContractWrite, useAccount, useWaitForTransaction, useContractRead } from "wagmi";
 
 import { notification } from 'antd';
@@ -49,6 +52,7 @@ function calculateAward( value ) {
     return null;
   }
 }
+
 
 export const Donation = () => {
   const { theme } = useContext(ThemeContext);
@@ -368,7 +372,7 @@ const transactionWaitData = useWaitForTransaction(
           
         </div>
         <div className="about-img">
-          <img src={theme.aboutimg1} alt="" />
+          <img src={DonationImg} alt="" />
         </div>
       </div>
     </div>
