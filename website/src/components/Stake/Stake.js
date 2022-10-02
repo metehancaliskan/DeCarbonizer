@@ -41,6 +41,17 @@ function convertFromBigNumber(value) {
   } catch (e) {
     return null;
   }
+
+}
+
+function convertFromBigNumberClaim(value) {
+  try {
+    let newValue = value.toNumber();
+    return newValue / (10 ** 18);
+  } catch (e) {
+    return null;
+  }
+
 }
 
 export const Stake = () => {
@@ -183,6 +194,7 @@ export const Stake = () => {
     contractInterface: carbonTokenAbi,
   };
 
+
   const carbonBalanceData = useContractRead({
     ...carbonParameters,
     functionName: "balanceOf",
@@ -196,21 +208,170 @@ export const Stake = () => {
     ...treeParameters,
     functionName: "balanceOf",
     args: [address],
-    watch: true,
-  });
+    watch: true
+  })
+
 
   const treeBalance = convertFromBigNumber(treeBalanceData.data);
 
+  const stakeData = useContractRead({
+    ...carbonParameters,
+    functionName: 'stakeInfos',
+    args: [address],
+    watch: true
+  })
+
+  const isStakedData = useContractRead({
+    ...carbonParameters,
+    functionName: 'addressStaked',
+    args: [address],
+    watch: true
+  })
+
+  const isStaked = isStakedData.data;
+
+  let stakedAmount;
+  //console.log(stakeData)
+  if (stakeData?.data?.amount) {
+    stakedAmount = convertFromBigNumber(stakeData.data.amount);
+  }
+
+
+  let stakeClaimDataConfig;
+
+
+  stakeClaimDataConfig = {
+    ...carbonParameters,
+    functionName: 'expectedGain',
+    args: [address],
+    watch: true
+  }
+
+
+
+  const stakeClaimData = useContractRead(stakeClaimDataConfig)
+
+  const stakeClaimAmount = convertFromBigNumberClaim(stakeClaimData.data);
+
+  const [transactionHash, setTransactionHash] = useState();
+
+
+
+  const approveWriteData = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    ...treeParameters,
+    functionName: 'approve',
+    chainId: contractAddress.chainId,
+    args: [contractAddress.carbonToken, convertToBigNumber(stake)],
+    onSuccess(data) {
+      //console.log("onsuccess", data)
+      setTransactionHash(data.hash);
+    },
+    onSettled(data, error) {
+      //console.log('Settled', { data, error })
+      if (error) {
+
+        notification.open({
+          message: <p className='error-title'>Hata</p>,
+          description: <p className='error-description'>{error.message}</p>,
+          placement: "topLeft",
+          className: "notification shadow",
+          icon: <CloseCircleFilled style={{ color: 'rgb(210,40,40)' }} />,
+        });
+      }
+    },
+  })
+
+  const stakeWriteData = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    ...carbonParameters,
+    functionName: 'stakeTreeToken',
+    chainId: contractAddress.chainId,
+    args: [convertToBigNumber(stake)],
+    onSuccess(data) {
+      //console.log("onsuccess", data)
+      setTransactionHash(data.hash);
+    },
+    onSettled(data, error) {
+      //console.log('Settled', { data, error })
+      if (error) {
+
+        notification.open({
+          message: <p className='error-title'>Hata</p>,
+          description: <p className='error-description'>{error.message}</p>,
+          placement: "topLeft",
+          className: "notification shadow",
+          icon: <CloseCircleFilled style={{ color: 'rgb(210,40,40)' }} />,
+        });
+      }
+    },
+  })
+
+  const claimWriteData = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    ...carbonParameters,
+    functionName: 'claimCarbonToken',
+    chainId: contractAddress.chainId,
+    args: [],
+    onSuccess(data) {
+      //console.log("onsuccess", data)
+      setTransactionHash(data.hash);
+    },
+    onSettled(data, error) {
+      //console.log('Settled', { data, error })
+      if (error) {
+
+        notification.open({
+          message: <p className='error-title'>Hata</p>,
+          description: <p className='error-description'>{error.message}</p>,
+          placement: "topLeft",
+          className: "notification shadow",
+          icon: <CloseCircleFilled style={{ color: 'rgb(210,40,40)' }} />,
+        });
+      }
+    },
+  })
+
+  let transactionWaitConfig = {};
+  if (transactionHash) {
+    transactionWaitConfig = {
+      hash: transactionHash,
+      onSuccess(data) {
+        if (data?.status == 0) {
+          notification.open({
+            message: <p className='error-title'>Error</p>,
+            description: <p className='error-description'>İşlem Onaylanmadı</p>,
+            placement: "topLeft",
+            className: "notification shadow",
+            icon: <CloseCircleFilled style={{ color: 'rgb(210,40,40)' }} />,
+          });
+        } else {
+          //console.log(data)
+          notification.open({
+            message: <p className='success-title'>Success</p>,
+            description: <p className='success-description'>İşlem Onaylandı!</p>,
+            placement: "topLeft",
+            className: "notification shadow",
+            icon: <CheckCircleFilled style={{ color: 'rgb(50,130,0)' }} />,
+            duration: 12,
+          });
+        }
+
+      },
+    };
+  }
+
+
   const onClickApprove = () => {
-    console.log("Approve");
+    approveWriteData.write();
   };
 
   const onClickStake = () => {
-    console.log("Stake");
+    stakeWriteData.write();
   };
 
   const onClickClaim = () => {
-    console.log("Claim");
+    claimWriteData.write();
   };
 
   return (
@@ -255,6 +416,20 @@ export const Stake = () => {
               className={`form-input ${classes.input}`}
             />
           </div>
+
+          <h1>{address && "Your Balance: " + treeBalance + " TREE"}</h1>
+          <h1>{address && "Your Balance: " + carbonBalance + " CARBON"}</h1>
+          {isStaked ?
+            <>
+              <h1>{address && "Staked Amount: " + stakedAmount + " TREE"}</h1>
+              <h1>{address && stakeClaimAmount && "Claimable Amount: " + stakeClaimAmount + " CARBON"}</h1>
+              </>
+              :
+              <>
+                <h1>{address && "Staked Amount: " + 0 + " TREE"}</h1>
+                <h1>{address && stakeClaimAmount && "Claimable Amount: " + 0 + " CARBON"}</h1>
+              </>
+          }
 
           <div className="lcr-buttonContainer">
             <Button className={classes.contactBtn} onClick={onClickApprove}>

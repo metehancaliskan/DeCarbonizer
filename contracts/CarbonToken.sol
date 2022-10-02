@@ -77,7 +77,7 @@ contract CarbonToken is ERC20, ReentrancyGuard, Ownable, ERC20Permit {
         success= false;
         require(addressStaked[_msgSender()] == true, "You are not participated");
         require(stakeInfos[_msgSender()].claimed == 0, "Already claimed");
-        uint256 stakeTime = stakeInfos[_msgSender()].endTS - block.timestamp;
+        uint256 stakeTime = block.timestamp - stakeInfos[_msgSender()].startTS;
         uint256 stakeAmount = stakeInfos[_msgSender()].amount;
         if(stakeInfos[_msgSender()].endTS < block.timestamp){
             emit EarlyRequest(_msgSender(), stakeTime );    
@@ -90,11 +90,11 @@ contract CarbonToken is ERC20, ReentrancyGuard, Ownable, ERC20Permit {
         emit Claimed(_msgSender(), totalTokens);
         success = true;    
     }
-    function expectedGain() external view returns(uint256 gain){
-        require(addressStaked[_msgSender()] == true, "You are not participated");
-        require(stakeInfos[_msgSender()].claimed == 0, "0");  
-        uint256 stakeAmount = stakeInfos[_msgSender()].amount;
-        uint256 stakeTime = stakeInfos[_msgSender()].endTS - block.timestamp;
+    function expectedGain( address staker ) external view returns(uint256 gain){
+        require(addressStaked[staker] == true, "You are not participated");
+        require(stakeInfos[staker].claimed == 0, "0");  
+        uint256 stakeAmount = stakeInfos[staker].amount;
+        uint256 stakeTime = block.timestamp - stakeInfos[staker].startTS;
         gain = (stakeAmount * multiplier * stakeTime / planDuration);      
     }
     function stakeTreeToken(uint256 stakeAmount) external  {
