@@ -3,6 +3,7 @@ import "./Pool.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+import PoolImg from "../../assets/png/1440091523.svg";
 
 export const Pool = () => {
   const { theme } = useContext(ThemeContext);
@@ -198,7 +199,7 @@ export const Pool = () => {
               rel="noreferrer"
               href={"https://bobbyhadz.com/blog/react-center-div"}
             >
-              AL
+              BUY
             </Button>
             <Button
               className={classes.contactBtn}
@@ -207,12 +208,12 @@ export const Pool = () => {
               rel="noreferrer"
               href={"https://bobbyhadz.com/blog/react-center-div"}
             >
-              Sat
+              SELL
             </Button>
           </div>
         </div>
         <div className="about-img">
-          <img src={theme.aboutimg1} alt="" />
+          <img src={PoolImg} alt="" />
         </div>
       </div>
     </div>
