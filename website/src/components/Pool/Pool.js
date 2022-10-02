@@ -173,41 +173,40 @@ export const Pool = () => {
     {aboutData.description2}
   </p> */}
 
-          <div className="lcr-buttonContainer">
-            <div className="input-container-pool">
-              <label htmlFor="Name" className={classes.label}>
-                CT
-              </label>
-              <input
-                placeholder="50"
-                value={ct}
-                onChange={(e) => setCT(e.target.value)}
-                type="number"
-                name="CT"
-                className={`form-input ${classes.input}`}
-              />
-            </div>
-
-            <div className="input-container-pool">
-              <label htmlFor="Name" className={classes.label}>
-                USDT
-              </label>
-              <input
-                placeholder="50"
-                value={usdt}
-                onChange={(e) => setUsdt(e.target.value)}
-                type="number"
-                name="USDT"
-                className={`form-input ${classes.input}`}
-              />
-            </div>
+          {/* <div className="input-container">
+            <label htmlFor="Name" className={classes.label}>
+              Burn
+            </label>
+            <h1>CT TOKEN</h1>
+          </div> */}
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <h1 style={{ alignItems: "center" }}>CT TOKEN</h1>
           </div>
 
           <div className="lcr-buttonContainer">
-            <Button className={classes.resumeBtn} onClick={onClickBuy}>
+            <Button
+              className={classes.resumeBtn}
+              onClick={onClickBuy}
+              target="_blank"
+              rel="noreferrer"
+              href={"https://bobbyhadz.com/blog/react-center-div"}
+            >
               AL
             </Button>
-            <Button className={classes.contactBtn} onClick={onClickSell}>
+            <Button
+              className={classes.contactBtn}
+              onClick={onClickSell}
+              target="_blank"
+              rel="noreferrer"
+              href={"https://bobbyhadz.com/blog/react-center-div"}
+            >
               Sat
             </Button>
           </div>

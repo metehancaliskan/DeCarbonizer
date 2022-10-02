@@ -3,7 +3,7 @@ import "./Donation.css";
 import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
-import DonationImg from "../../assets/png/Seedling.svg";
+import DonationImg from "../../assets/svg/Seedling.svg";
 
 export const Donation = () => {
   const { theme } = useContext(ThemeContext);
