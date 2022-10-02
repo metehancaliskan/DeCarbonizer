@@ -12,13 +12,14 @@ contract TreeToken is ERC20, Ownable, ERC20Permit {
     address donateAddress;
     address stableCoinAddress;
 
-    uint treePrice = 5 * 10 ** decimals();
+    //uint treePrice = 5 * 10 ** decimals();
+    uint treePrice = 5;
     IERC20 stableToken;
 
     bool locked;
 
     constructor(address _donateAddress, address _stableCoinAddress ) ERC20("TreeToken", "TREE") ERC20Permit("TreeToken") {
-        stableToken = IERC20( stableCoinAddress );
+        stableToken = IERC20( _stableCoinAddress );
         donateAddress = _donateAddress;
         stableCoinAddress = _stableCoinAddress; 
     }
