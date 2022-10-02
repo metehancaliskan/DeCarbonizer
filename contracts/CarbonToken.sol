@@ -24,7 +24,7 @@ interface Token {
 
 contract CarbonToken is ERC20, ReentrancyGuard, Ownable, ERC20Permit {
 
-    address pooladdress = 0x9d019EC71aEbf34bf9Ef5071974A83e2163Ac99a;
+    address poolAddress;
 
     Token treeToken;
 
@@ -48,10 +48,11 @@ contract CarbonToken is ERC20, ReentrancyGuard, Ownable, ERC20Permit {
     event Claimed(address indexed from, uint256 amount);
     event EarlyRequest(address indexed from, uint256 amount);
 
-    constructor( Token _treeTokenAddress) ERC20("CarbonToken", "CT") ERC20Permit("CarbonToken") {
+    constructor( Token _treeTokenAddress, address _poolAddress) ERC20("CarbonToken", "CT") ERC20Permit("CarbonToken") {
         _mint(msg.sender, 4 * 10 ** (decimals() + 11 ));  
         treeToken = _treeTokenAddress;  
         totalStakers = 0;
+        poolAddress = _poolAddress;
     }
 
     bool locked;
@@ -126,7 +127,7 @@ contract CarbonToken is ERC20, ReentrancyGuard, Ownable, ERC20Permit {
         address msgSender = msg.sender;
         require( balanceOf( msgSender ) >= amount, "not enough balance" );
         _burn(msgSender,amount/10);
-        transferFrom( msgSender, pooladdress, amount-amount/10 );
+        _transfer( msgSender, poolAddress, amount-amount/10 );
     }
 
 

@@ -5,6 +5,39 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import StakeImg from "../../assets/svg/StakeImg.svg";
 
+import { useContractWrite, useAccount, useWaitForTransaction, useContractRead } from "wagmi";
+
+import { notification } from 'antd';
+
+import contractAddress from "../../contracts/contractAddress.json"
+import stableCoinAbi from "../../contracts/MockStableCoin.json"
+import treeTokenAbi from "../../contracts/TreeToken.json"
+import carbonTokenAbi from "../../contracts/CarbonToken.json"
+
+import { BigNumber } from "ethers";
+
+import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
+
+function convertToBigNumber( value ) {
+  try {
+  const DECIMALS = BigNumber.from(10).pow( BigNumber.from(18) );
+  let newValue = BigNumber.from(value);
+  return newValue.mul( DECIMALS );
+  } catch(e) {
+    return null;
+  }
+}
+
+function convertFromBigNumber(  value ) {
+  try {
+  const DECIMALS = BigNumber.from(10).pow( BigNumber.from(16) );
+  let newValue = BigNumber.from(value);
+  return newValue.div( DECIMALS ).toNumber() / 100;
+} catch(e) {
+  return null;
+}
+}
+
 export const Stake = () => {
   const { theme } = useContext(ThemeContext);
   const useStyles = makeStyles((t) => ({
@@ -132,7 +165,39 @@ export const Stake = () => {
   }));
   const classes = useStyles();
 
-  const [stake, setStake] = useState(0);
+  const [stake, setStake] = useState();
+  const { address, connector, isConnected } = useAccount();
+
+  const treeParameters = {
+    addressOrName: contractAddress.treeToken,
+    contractInterface: treeTokenAbi,
+  }
+
+  const carbonParameters = {
+    addressOrName: contractAddress.carbonToken,
+    contractInterface: carbonTokenAbi,
+  }
+
+ 
+  const carbonBalanceData = useContractRead({
+    ...carbonParameters,
+    functionName: 'balanceOf',
+    args: [address],
+    watch:true
+  })
+  
+  const carbonBalance = convertFromBigNumber(carbonBalanceData.data);
+  
+  const treeBalanceData = useContractRead({
+    ...treeParameters,
+    functionName: 'balanceOf',
+    args: [address],
+    watch:true
+  })
+  
+  
+  const treeBalance = convertFromBigNumber( treeBalanceData.data );
+
 
   const onClickApprove = () => {
     console.log("Approve");
@@ -140,6 +205,10 @@ export const Stake = () => {
 
   const onClickStake = () => {
     console.log("Stake");
+  };
+
+  const onClickClaim = () => {
+    console.log("Claim");
   };
 
   return (
@@ -173,7 +242,7 @@ export const Stake = () => {
           </p> */}
           <div className="input-container">
             <label htmlFor="Name" className={classes.label}>
-              Stake
+              Stake TREE
             </label>
             <input
               placeholder="50"
@@ -187,10 +256,13 @@ export const Stake = () => {
 
           <div className="lcr-buttonContainer">
             <Button className={classes.resumeBtn} onClick={onClickApprove}>
-              Approve
+              Approve TREE
             </Button>
             <Button className={classes.contactBtn} onClick={onClickStake}>
               Stake
+            </Button>
+            <Button className={classes.contactBtn} onClick={onClickClaim}>
+              Claim
             </Button>
           </div>
         </div>

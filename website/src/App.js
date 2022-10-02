@@ -14,6 +14,7 @@ import { useAccount, useBlockNumber } from "wagmi";
 import { ThemeContext } from "./contexts/ThemeContext";
 
 import "./App.css";
+import 'antd/dist/antd.css'
 import Donation from "./components/Donation/Donation";
 
 function App() {
