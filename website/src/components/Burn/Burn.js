@@ -189,6 +189,7 @@ export const Burn = () => {
   const carbonBalance = convertFromBigNumber(carbonBalanceData.data);
 
   
+  
   const writeData = useContractWrite({
     mode: 'recklesslyUnprepared',
     ...burnContractParameters,
