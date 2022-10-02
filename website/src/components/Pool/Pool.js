@@ -4,6 +4,7 @@ import { ThemeContext } from "../../contexts/ThemeContext";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import PoolImg from "../../assets/png/1440091523.svg";
+import contractAddress from "../../contracts/contractAddress.json";
 
 export const Pool = () => {
   const { theme } = useContext(ThemeContext);
@@ -144,6 +145,17 @@ export const Pool = () => {
     console.log("Sell");
   };
 
+  const swapUrlBuy =
+    "https://traderjoexyz.com/trade?inputCurrency=" +
+    contractAddress.stableCoin +
+    "&outputCurrency=" +
+    contractAddress.carbonToken;
+  const swapUrlSell =
+    "https://traderjoexyz.com/trade?inputCurrency=" +
+    contractAddress.carbonToken +
+    "&outputCurrency=" +
+    contractAddress.stableCoin;
+
   return (
     <div
       className="about"
@@ -197,7 +209,7 @@ export const Pool = () => {
               onClick={onClickBuy}
               target="_blank"
               rel="noreferrer"
-              href={"https://bobbyhadz.com/blog/react-center-div"}
+              href={swapUrlBuy}
             >
               BUY
             </Button>
@@ -206,7 +218,7 @@ export const Pool = () => {
               onClick={onClickSell}
               target="_blank"
               rel="noreferrer"
-              href={"https://bobbyhadz.com/blog/react-center-div"}
+              href={swapUrlSell}
             >
               SELL
             </Button>
