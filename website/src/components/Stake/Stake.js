@@ -46,9 +46,12 @@ function convertFromBigNumber(value) {
 
 function convertFromBigNumberClaim(value) {
   try {
-    let newValue = value.toNumber();
-    return newValue / (10 ** 18);
+    //console.log(value,"value")
+    const DECIMALS = BigNumber.from(10).pow(BigNumber.from(10));
+    let newValue = value.div(DECIMALS).toNumber();
+    return newValue / (10 ** 8) ;
   } catch (e) {
+    //console.log("error", e)
     return null;
   }
 
@@ -373,6 +376,10 @@ export const Stake = () => {
   const onClickClaim = () => {
     claimWriteData.write();
   };
+
+
+  //console.log("stakeClaimAmount",stakeClaimData.data);
+  //console.log("stakeClaimAmount", stakeClaimAmount );
 
   return (
     <div
